@@ -13,7 +13,10 @@ def call(process: subprocess.Popen[str], request_id: int, method: str, params: d
     request = {"id": request_id, "method": method, "params": params or {}}
     process.stdin.write(json.dumps(request) + "\n")
     process.stdin.flush()
-    return json.loads(process.stdout.readline())
+    line = process.stdout.readline()
+    if not line:
+        raise RuntimeError("MCP server exited before responding")
+    return json.loads(line)
 
 
 def main() -> None:
@@ -41,7 +44,8 @@ def main() -> None:
         )
     )
 
-    process.terminate()
+    process.stdin.close()  # Server exits cleanly on stdin EOF.
+    process.wait(timeout=5)
 
 
 if __name__ == "__main__":

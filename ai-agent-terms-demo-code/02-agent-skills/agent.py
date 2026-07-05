@@ -18,7 +18,7 @@ class Skill:
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
-    if not text.startswith("---"):
+    if not text.startswith("---") or text.count("---") < 2:
         return {}
     _, block, _ = text.split("---", 2)
     values: dict[str, str] = {}
@@ -43,9 +43,16 @@ def load_skills() -> list[Skill]:
     return skills
 
 
+STOPWORDS = {"a", "an", "and", "for", "is", "of", "or", "the", "this", "to", "what", "when"}
+
+
+def tokenize(text: str) -> set[str]:
+    return {word.strip(".,!?\"'") for word in text.lower().split()} - STOPWORDS
+
+
 def score(task: str, skill: Skill) -> int:
-    haystack = f"{skill.name} {skill.description}".lower()
-    return sum(1 for word in task.lower().split() if word.strip(".,!?") in haystack)
+    haystack = tokenize(f"{skill.name.replace('-', ' ')} {skill.description}")
+    return len(tokenize(task) & haystack)
 
 
 def main() -> None:

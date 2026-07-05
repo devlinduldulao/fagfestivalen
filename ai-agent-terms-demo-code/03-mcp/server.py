@@ -27,6 +27,8 @@ def handle(message: dict) -> dict:
     elif method == "tools/call" and params.get("name") == "inventory.lookup":
         sku = params.get("arguments", {}).get("sku")
         result = {"content": INVENTORY.get(sku, {"error": "unknown sku"})}
+    elif method == "tools/call":
+        return {"id": message.get("id"), "error": f"unknown tool: {params.get('name')}"}
     else:
         return {"id": message.get("id"), "error": f"unsupported method: {method}"}
 

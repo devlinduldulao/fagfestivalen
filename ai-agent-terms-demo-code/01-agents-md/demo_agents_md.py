@@ -15,6 +15,8 @@ def find_agent_instructions(start: Path) -> list[Path]:
         candidate = folder / "AGENTS.md"
         if candidate.exists():
             found.append(candidate)
+        if (folder / ".git").exists():
+            break  # Stop at the repo root, like real agents do.
     return list(reversed(found))
 
 
@@ -24,6 +26,9 @@ def main() -> None:
 
     print(f"Working directory: {start}")
     print(f"Instructions loaded: {len(files)}")
+    if not files:
+        print("No AGENTS.md found between here and the repo root.")
+        return
     for index, path in enumerate(files, start=1):
         print("\n" + "=" * 72)
         print(f"{index}. {path}")

@@ -53,11 +53,11 @@ def post_json(url: str, payload: dict) -> dict:
 
 
 def main() -> None:
-    server = HTTPServer(("127.0.0.1", 8765), FinanceAgent)
+    server = HTTPServer(("127.0.0.1", 0), FinanceAgent)  # Port 0: never collides on stage.
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
 
-    base_url = "http://127.0.0.1:8765"
+    base_url = f"http://127.0.0.1:{server.server_address[1]}"
     with urllib.request.urlopen(base_url + "/.well-known/agent-card.json") as response:
         card = json.loads(response.read())
 
@@ -70,6 +70,7 @@ def main() -> None:
     print("\nProcurement delegated approval and received:")
     print(json.dumps(result, indent=2))
     server.shutdown()
+    server.server_close()
 
 
 if __name__ == "__main__":
