@@ -75,6 +75,7 @@ def main() -> None:
         return
 
     print(f"\nLoaded skill: {best.name}")
+    print("(A real agent matches descriptions with the model itself; word overlap is a stand-in.)")
     print(best.path.joinpath("SKILL.md").read_text(encoding="utf-8").strip())
 
     demo_script = best.path / "scripts" / "demo.py"

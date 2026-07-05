@@ -65,10 +65,15 @@ def main() -> None:
     print(json.dumps(card, indent=2))
 
     task_url = base_url + card["tasks"][0]["url"]
-    result = post_json(task_url, {"vendor": "Acme Training", "amount": 4200})
 
-    print("\nProcurement delegated approval and received:")
+    result = post_json(task_url, {"vendor": "Acme Training", "amount": 4200})
+    print("\nProcurement delegated a 4200 request and received:")
     print(json.dumps(result, indent=2))
+
+    result = post_json(task_url, {"vendor": "Acme Training", "amount": 9500})
+    print("\nProcurement delegated a 9500 request and received:")
+    print(json.dumps(result, indent=2))
+
     server.shutdown()
     server.server_close()
 

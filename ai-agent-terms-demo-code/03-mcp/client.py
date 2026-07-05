@@ -44,6 +44,8 @@ def main() -> None:
         )
     )
 
+    print("\n(Real MCP is JSON-RPC 2.0 with an initialize handshake; this shows the shape only.)")
+
     process.stdin.close()  # Server exits cleanly on stdin EOF.
     process.wait(timeout=5)
 
