@@ -45,7 +45,7 @@ python3 01-agents-md/demo_agents_md.py 01-agents-md/app/services
 **Point at, in order:**
 1. `Instructions loaded: 2` — the agent found both files.
 2. File 1 = root rules (test command, PR title format).
-3. File 2 = service-layer rules (pure functions, no network calls).
+3. File 2 = service-layer rules (pure functions, no network calls, and the full test suite after service edits).
 4. The closing lines: *general rules first, local rules narrow them*.
 
 **Landing line:**
@@ -100,8 +100,8 @@ Point at: `No skill matched. The agent keeps the extra instructions unloaded.`
 ## Demo 3 — MCP (after slide 8)
 
 **Setup line:**
-> "The client is about to talk to a server it knows nothing about. First
-> question it asks: what tools do you have?"
+> "The client starts with MCP's handshake, then asks a server it knows nothing
+> about: what tools do you have?"
 
 **Run:**
 
@@ -118,8 +118,8 @@ python3 03-mcp/client.py
 > "One protocol, any server. Swap this inventory server for Notion or Stripe —
 > the client code doesn't change."
 
-**Honesty beat:** the demo prints it for you — real MCP is JSON-RPC 2.0 with an
-`initialize` handshake. This shows the shape only.
+**Honesty beat:** the demo performs the JSON-RPC 2.0 handshake, but keeps the
+tool definitions and transport intentionally small so the terminal stays readable.
 
 ---
 

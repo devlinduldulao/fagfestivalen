@@ -10,13 +10,19 @@ SERVER = Path(__file__).with_name("server.py")
 
 
 def call(process: subprocess.Popen[str], request_id: int, method: str, params: dict | None = None) -> dict:
-    request = {"id": request_id, "method": method, "params": params or {}}
+    request = {"jsonrpc": "2.0", "id": request_id, "method": method, "params": params or {}}
     process.stdin.write(json.dumps(request) + "\n")
     process.stdin.flush()
     line = process.stdout.readline()
     if not line:
         raise RuntimeError("MCP server exited before responding")
     return json.loads(line)
+
+
+def notify(process: subprocess.Popen[str], method: str, params: dict | None = None) -> None:
+    request = {"jsonrpc": "2.0", "method": method, "params": params or {}}
+    process.stdin.write(json.dumps(request) + "\n")
+    process.stdin.flush()
 
 
 def main() -> None:
@@ -28,15 +34,27 @@ def main() -> None:
     )
     assert process.stdin and process.stdout
 
-    print("Client asks a standard server what tools it exposes:")
-    print(json.dumps(call(process, 1, "tools/list"), indent=2))
+    call(
+        process,
+        1,
+        "initialize",
+        {
+            "protocolVersion": "2025-11-25",
+            "capabilities": {},
+            "clientInfo": {"name": "conference-demo", "version": "1.0"},
+        },
+    )
+    notify(process, "notifications/initialized")
+
+    print("Client initializes a standard server, then asks what tools it exposes:")
+    print(json.dumps(call(process, 2, "tools/list"), indent=2))
 
     print("\nClient calls a tool without knowing its internal API:")
     print(
         json.dumps(
             call(
                 process,
-                2,
+                3,
                 "tools/call",
                 {"name": "inventory.lookup", "arguments": {"sku": "sku-200"}},
             ),
@@ -44,7 +62,7 @@ def main() -> None:
         )
     )
 
-    print("\n(Real MCP is JSON-RPC 2.0 with an initialize handshake; this shows the shape only.)")
+    print("\n(The demo uses the JSON-RPC 2.0 initialization flow and keeps the tool payloads small.)")
 
     process.stdin.close()  # Server exits cleanly on stdin EOF.
     process.wait(timeout=5)
@@ -52,4 +70,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
