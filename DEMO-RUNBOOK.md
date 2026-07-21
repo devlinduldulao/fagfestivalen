@@ -1,7 +1,8 @@
 # Live Demo Runbook — "5 AI Agent Terms You Need to Know"
 
 Rehearse this top to bottom until you can do it without reading. Every demo is
-one command, dependency-free, and finishes in under 3 seconds.
+one command, uses only the .NET shared frameworks, and finishes quickly after
+the pre-flight build.
 
 ---
 
@@ -9,7 +10,8 @@ one command, dependency-free, and finishes in under 3 seconds.
 
 ```bash
 cd /Users/devlinduldulao/Documents/DEVELOPMENT/fagfestivalen/ai-agent-terms-demo-code
-python3 --version        # must be 3.10+
+dotnet --version        # must be 10.0+
+dotnet build AgentTermsDemos.slnx
 ```
 
 - [ ] Terminal font size cranked up (Cmd + several times) — test from the back of the room.
@@ -21,11 +23,11 @@ python3 --version        # must be 3.10+
 **One-shot smoke test (run this the morning of the talk):**
 
 ```bash
-python3 01-agents-md/demo_agents_md.py 01-agents-md/app/services && \
-python3 02-agent-skills/agent.py "make a conference deck outline" && \
-python3 03-mcp/client.py && \
-python3 04-a2a/a2a_demo.py && \
-python3 05-subagents/subagents_demo.py && echo "ALL DEMOS OK"
+dotnet run --no-build --project 01-agents-md -- 01-agents-md/app/services && \
+dotnet run --no-build --project 02-agent-skills -- "make a conference deck outline" && \
+dotnet run --no-build --project 03-mcp/McpClient && \
+dotnet run --no-build --project 04-a2a && \
+dotnet run --no-build --project 05-subagents && echo "ALL DEMOS OK"
 ```
 
 ---
@@ -39,13 +41,13 @@ python3 05-subagents/subagents_demo.py && echo "ALL DEMOS OK"
 **Run:**
 
 ```bash
-python3 01-agents-md/demo_agents_md.py 01-agents-md/app/services
+dotnet run --project 01-agents-md -- 01-agents-md/app/services
 ```
 
 **Point at, in order:**
 1. `Instructions loaded: 2` — the agent found both files.
 2. File 1 = root rules (test command, PR title format).
-3. File 2 = service-layer rules (pure functions, no network calls, and the full test suite after service edits).
+3. File 2 = service-layer rules (pure functions, no network calls, and the full test harness after service edits).
 4. The closing lines: *general rules first, local rules narrow them*.
 
 **Landing line:**
@@ -66,15 +68,15 @@ AGENTS.md is the open standard under the Linux Foundation's AAIF."
 **Run — matching task #1:**
 
 ```bash
-python3 02-agent-skills/agent.py "make a conference deck outline"
+dotnet run --project 02-agent-skills -- "make a conference deck outline"
 ```
 
-Point at: only **deck-builder** was loaded, and its bundled script even ran.
+Point at: only **deck-builder** was loaded, and its bundled C# console app ran.
 
 **Run — matching task #2:**
 
 ```bash
-python3 02-agent-skills/agent.py "review this code for secrets"
+dotnet run --project 02-agent-skills -- "review this code for secrets"
 ```
 
 Point at: now only **security-review** loaded. Deck rules never entered context.
@@ -82,7 +84,7 @@ Point at: now only **security-review** loaded. Deck rules never entered context.
 **Run — the punchline:**
 
 ```bash
-python3 02-agent-skills/agent.py "what is the weather"
+dotnet run --project 02-agent-skills -- "what is the weather"
 ```
 
 Point at: `No skill matched. The agent keeps the extra instructions unloaded.`
@@ -100,13 +102,13 @@ Point at: `No skill matched. The agent keeps the extra instructions unloaded.`
 ## Demo 3 — MCP (after slide 8)
 
 **Setup line:**
-> "The client starts with MCP's handshake, then asks a server it knows nothing
-> about: what tools do you have?"
+> "The .NET client starts with MCP's handshake, then asks a server it knows
+> nothing about: what tools do you have?"
 
 **Run:**
 
 ```bash
-python3 03-mcp/client.py
+dotnet run --project 03-mcp/McpClient
 ```
 
 **Point at, in order:**
@@ -119,7 +121,7 @@ python3 03-mcp/client.py
 > the client code doesn't change."
 
 **Honesty beat:** the demo performs the JSON-RPC 2.0 handshake, but keeps the
-tool definitions and transport intentionally small so the terminal stays readable.
+tool definitions and standard-input transport intentionally small so the terminal stays readable.
 
 ---
 
@@ -132,7 +134,7 @@ tool definitions and transport intentionally small so the terminal stays readabl
 **Run:**
 
 ```bash
-python3 04-a2a/a2a_demo.py
+dotnet run --project 04-a2a
 ```
 
 **Point at, in order:**
@@ -147,7 +149,8 @@ python3 04-a2a/a2a_demo.py
 > advertised endpoint, get a structured decision."
 
 **If asked:** real A2A has a task lifecycle (submitted → working → completed);
-this demo compresses it to a synchronous call for clarity.
+this demo compresses it to a synchronous call for clarity. The finance agent is
+an ASP.NET Core minimal API hosted on a free local port.
 
 ---
 
@@ -160,7 +163,7 @@ this demo compresses it to a synchronous call for clarity.
 **Run:**
 
 ```bash
-python3 05-subagents/subagents_demo.py
+dotnet run --project 05-subagents
 ```
 
 **Point at, in order:**
@@ -172,8 +175,8 @@ python3 05-subagents/subagents_demo.py
 > "Two wins in one pattern: speed from parallelism, and a clean parent context
 > because children absorb the bulk reading."
 
-**If asked:** threads with `time.sleep` simulate the workers here; real
-subagents each get a fresh context window — that isolation is the point.
+**If asked:** asynchronous .NET tasks with `Task.Delay` simulate the workers
+here; real subagents each get a fresh context window — that isolation is the point.
 
 ---
 
@@ -190,7 +193,8 @@ subagents each get a fresh context window — that isolation is the point.
 
 | Symptom | Move |
 |---|---|
-| `python3: command not found` | `which python3` — worst case use the pyenv path: `~/.pyenv/versions/3.13.5/bin/python3` |
+| `dotnet: command not found` | `which dotnet`; if missing, install the .NET 10 SDK before the talk. |
+| Wrong SDK selected | `dotnet --list-sdks` — confirm that a 10.0 SDK is installed. |
 | Wrong output / weird state | `clear`, re-run the same command once. All demos are stateless and idempotent. |
 | File-not-found errors | You're in the wrong directory: `cd ~/Documents/DEVELOPMENT/fagfestivalen/ai-agent-terms-demo-code` |
 | Total demo failure | Every expected output is described above — narrate it from the slide's code snippet and move on. Never debug live for more than 30 seconds. |

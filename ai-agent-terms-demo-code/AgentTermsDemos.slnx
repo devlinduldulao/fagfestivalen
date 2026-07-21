@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/01 AGENTS.md/">
+    <Project Path="01-agents-md/AgentInstructionsDemo.csproj" />
+    <Project Path="01-agents-md/tests/AgentInstructionsDemo.Tests.csproj" />
+  </Folder>
+  <Folder Name="/02 Agent Skills/">
+    <Project Path="02-agent-skills/AgentSkillsDemo.csproj" />
+    <Project Path="02-agent-skills/skills/deck-builder/scripts/DeckBuilderScript.csproj" />
+  </Folder>
+  <Folder Name="/03 MCP/">
+    <Project Path="03-mcp/McpClient/McpClient.csproj" />
+    <Project Path="03-mcp/McpServer/McpServer.csproj" />
+  </Folder>
+  <Folder Name="/04 A2A/">
+    <Project Path="04-a2a/A2ADemo.csproj" />
+  </Folder>
+  <Folder Name="/05 Subagents/">
+    <Project Path="05-subagents/SubagentsDemo.csproj" />
+  </Folder>
+</Solution>

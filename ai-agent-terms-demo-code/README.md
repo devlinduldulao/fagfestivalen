@@ -1,49 +1,61 @@
 # AI Agent Terms Demo Code
 
-These demos are intentionally small and dependency-free. Run them with Python
-3.10+ from this directory (use `python` instead of `python3` if that is how
-Python is installed on your machine).
+These demos are intentionally small, dependency-free C# examples for .NET 10.
+Build the solution once from this directory before running the demos:
+
+```bash
+dotnet build AgentTermsDemos.slnx
+```
 
 ## 1. AGENTS.md
 
 Shows how project instructions can be discovered from the working directory.
 
 ```bash
-python3 01-agents-md/demo_agents_md.py 01-agents-md/app/services
+dotnet run --project 01-agents-md -- 01-agents-md/app/services
+```
+
+The zero-dependency verification harness is also runnable directly:
+
+```bash
+dotnet run --project 01-agents-md/tests
 ```
 
 ## 2. Agent Skills
 
 Shows progressive disclosure: the agent only loads the skill whose description
-matches the task, and loads nothing when no description matches.
+matches the task, and loads nothing when no description matches. The matching
+skill can also run a bundled C# console app.
 
 ```bash
-python3 02-agent-skills/agent.py "make a conference deck outline"
-python3 02-agent-skills/agent.py "review this code for secrets"
-python3 02-agent-skills/agent.py "what is the weather"
+dotnet run --project 02-agent-skills -- "make a conference deck outline"
+dotnet run --project 02-agent-skills -- "review this code for secrets"
+dotnet run --project 02-agent-skills -- "what is the weather"
 ```
 
 ## 3. MCP
 
-Shows an MCP-shaped client/server exchange over standard input and output.
+Shows an MCP-shaped client/server exchange over standard input and output using
+`System.Text.Json` and a child .NET process.
 
 ```bash
-python3 03-mcp/client.py
+dotnet run --project 03-mcp/McpClient
 ```
 
 ## 4. A2A
 
-Shows one agent discovering another agent card and delegating a task to it.
+Shows one agent discovering another agent card and delegating a task over HTTP.
+The local finance agent is an ASP.NET Core minimal API.
 
 ```bash
-python3 04-a2a/a2a_demo.py
+dotnet run --project 04-a2a
 ```
 
 ## 5. Subagents
 
-Shows a parent agent splitting independent checks across isolated workers.
+Shows a parent agent splitting independent checks across asynchronous workers
+with `Task.WhenAny`.
 
 ```bash
-python3 05-subagents/subagents_demo.py
+dotnet run --project 05-subagents
 ```
-

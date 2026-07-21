@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AgentSkillsDemo</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="skills/**/scripts/**/*.cs" />
+    <ProjectReference Include="skills/deck-builder/scripts/DeckBuilderScript.csproj" />
+  </ItemGroup>
+</Project>

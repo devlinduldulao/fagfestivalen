@@ -1,6 +1,5 @@
 # Project Instructions For Agents
 
-- Test command: `python -m unittest discover -s tests`
+- Test command: `dotnet run --project tests`
 - Style rule: keep business logic inside `app/services`.
 - PR title format: `agent-demo: <short imperative summary>`.
-
